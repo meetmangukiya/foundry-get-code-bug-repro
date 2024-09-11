@@ -1,19 +1,29 @@
+It can find the artifact if it is imported(see `ERC21`) in some test file, but defeats the purpose
+when you want to use this to avoid compiler incompat errors. It cannot find the artifact for `ERC20`.
+
 ```
 $ forge test -vvv --mc SomeTest
 [⠊] Compiling...
 No files changed, compilation skipped
 
-Ran 1 test for test/SomeTest.t.sol:SomeTest
-[FAIL. Reason: setup failed: vm.getCode: no matching artifact found] setUp() (gas: 0)
-Suite result: FAILED. 0 passed; 1 failed; 0 skipped; finished in 7.70ms (0.00ns CPU time)
+Ran 2 tests for test/SomeTest.t.sol:SomeTest
+[PASS] testErc21() (gas: 3821)
+[FAIL. Reason: vm.getCode: no matching artifact found] testSomething() (gas: 2943)
+Traces:
+  [2943] SomeTest::testSomething()
+    ├─ [0] VM::getCode("test/tokens/ERC20.sol:ERC20") [staticcall]
+    │   └─ ← [Revert] vm.getCode: no matching artifact found
+    └─ ← [Revert] vm.getCode: no matching artifact found
 
-Ran 1 test suite in 254.34ms (7.70ms CPU time): 0 tests passed, 1 failed, 0 skipped (1 total tests)
+Suite result: FAILED. 1 passed; 1 failed; 0 skipped; finished in 1.04ms (493.54µs CPU time)
+
+Ran 1 test suite in 186.79ms (1.04ms CPU time): 1 tests passed, 1 failed, 0 skipped (2 total tests)
 
 Failing tests:
 Encountered 1 failing test in test/SomeTest.t.sol:SomeTest
-[FAIL. Reason: setup failed: vm.getCode: no matching artifact found] setUp() (gas: 0)
+[FAIL. Reason: vm.getCode: no matching artifact found] testSomething() (gas: 2943)
 
-Encountered a total of 1 failing tests, 0 tests succeeded
+Encountered a total of 1 failing tests, 1 tests succeeded
 ```
 
 ```
